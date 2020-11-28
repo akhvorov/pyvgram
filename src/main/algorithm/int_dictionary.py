@@ -15,7 +15,7 @@ class IntDictionary:
         parents_stack = []
         self.seqs = sorted(self.seqs)
 
-        for i, current in enumerate(seqs):
+        for i, current in enumerate(self.seqs):
             while len(parents_stack) > 0:
                 prefix = parents_stack[-1][0]
                 if current[:len(prefix)] == prefix:

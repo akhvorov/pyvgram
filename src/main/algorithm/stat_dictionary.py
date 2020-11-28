@@ -140,9 +140,7 @@ class StatDictionary:
 
         items = sorted(items, key=lambda x: -x.score)
         min_prob_result = self.min_probability
-        accumulated_freqs = 0.0
-        for pair in self.pairs_freqs:
-            accumulated_freqs += pair[1]
+        accumulated_freqs = sum(self.pairs_freqs.values())
 
         for item in items:
             if item.score < 0:
@@ -213,8 +211,9 @@ class StatDictionary:
                     for next_id in parse:
                         old_freq = self.freq(next_id)
                         new_freq = old_freq + count
-                        code_length_without_symbol -= new_freq * log(new_freq) - \
-                                                      (old_freq * log(old_freq) if old_freq > 0 else 0)
+                        if count > 0:
+                            code_length_without_symbol -= new_freq * log(new_freq) - \
+                                                          (old_freq * log(old_freq) if old_freq > 0 else 0)
 
                     score = code_length_without_symbol - code_length
                     if score > 0:
