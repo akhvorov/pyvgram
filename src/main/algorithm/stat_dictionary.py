@@ -3,7 +3,7 @@ import numpy as np
 from math import log
 from typing import List, Tuple, Set
 
-from src.algorithm.int_dictionary import IntDictionary
+from main.algorithm.int_dictionary import IntDictionary
 
 
 class StatItem:
@@ -108,7 +108,7 @@ class StatDictionary:
             symbol = self.search(seq)
             items.append(StatItem(-1, symbol, float("inf"), self.freq(symbol)))
 
-        slots += len(self.alphabet())
+        slots += len(self.alphabet())  # TODO why?
         start_with = [0] * len(self.symbol_freqs)
         ends_with = [0] * len(self.symbol_freqs)
         for pair, freq in self.pairs_freqs.items():

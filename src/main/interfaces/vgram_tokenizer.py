@@ -1,10 +1,10 @@
 import random
 from typing import List, Union
 
-from src.algorithm.int_dictionary import IntDictionary
-from src.algorithm.vgram_builder import VGramBuilder
-from src.interfaces.coder import SimpleCoder
-from src.interfaces.tokenizer import Tokenizer
+from main.algorithm.int_dictionary import IntDictionary
+from main.algorithm.vgram_builder import VGramBuilder
+from main.interfaces.coder import SimpleCoder
+from main.interfaces.tokenizer import Tokenizer
 
 
 class VGramTokenizer(Tokenizer):
