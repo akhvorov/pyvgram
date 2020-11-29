@@ -1,16 +1,31 @@
 from main.interfaces.vgram_tokenizer import VGramTokenizer
 
 
-def test_1():
+def test_words_level():
     data_dir = "/Users/aleksandr.khvorov/jb/grazie/grazie-datasets/data/"
-    files = [data_dir + "results_with_commits_hash_common_delete_duplicates.txt"]
+    files = [data_dir + "stardust/all-texts.txt"]
 
-    tokenizer = VGramTokenizer(200)
+    tokenizer = VGramTokenizer(10000, words_level=True)
     tokenizer.train(files, iters=1, verbose=1)
     encoded_seq = tokenizer.encode("hello world")
     print(encoded_seq)
     decoded = tokenizer.decode(encoded_seq)
-    print(decoded)
+    assert decoded == "hello world"
+    print([tokenizer.decode([i]) for i in tokenizer.encode("fix bug")])
+    print([tokenizer.coder.decode(i) for i in tokenizer.dict.seqs][:10])
+
+
+def test_1():
+    data_dir = "/Users/aleksandr.khvorov/jb/grazie/grazie-datasets/data/"
+    files = [data_dir + "stardust/all-texts.txt"]
+
+    tokenizer = VGramTokenizer(10000, words_level=False)
+    tokenizer.train(files, iters=5, verbose=1)
+    encoded_seq = tokenizer.encode("hello world")
+    print(encoded_seq)
+    decoded = tokenizer.decode(encoded_seq)
+    assert decoded == "hello world"
+    print([tokenizer.decode([i]) for i in tokenizer.encode("fix bug")])
 
 
 def test_fit():
@@ -25,4 +40,6 @@ def test_fit():
 
 
 if __name__ == '__main__':
-    test_fit()
+    # test_fit()
+    # test_1()
+    test_words_level()

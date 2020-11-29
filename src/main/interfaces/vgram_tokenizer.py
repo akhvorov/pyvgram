@@ -1,5 +1,5 @@
 import random
-from typing import List, Union
+from typing import List, Union, Optional
 
 from main.algorithm.int_dictionary import IntDictionary
 from main.algorithm.vgram_builder import VGramBuilder
@@ -8,34 +8,54 @@ from main.interfaces.tokenizer import Tokenizer
 
 
 class VGramTokenizer(Tokenizer):
-    def __init__(self, size: int = 30000):
+    def __init__(self, size: int = 30000, words_level: bool = True):
         self.coder = SimpleCoder()
         self.size = size
-        self.dict: IntDictionary = None
+        self.words_level = words_level
+        self.dict: Optional[IntDictionary] = None
+
+    def _split_words(self, text: str) -> List[str]:
+        if self.words_level:
+            words = []
+            word = ""
+            for c in text:
+                if not c.isalnum():
+                    words.append(word)
+                    word = ""
+                word += c
+            words.append(word)
+        else:
+            words = [text]
+        return words
+
+    def _encode_one(self, seq: str) -> List[int]:
+        coded = []
+        for word in self._split_words(seq):
+            coded += self.dict.parse(self.coder.encode(word))
+        return coded
 
     def encode(self, seqs: Union[str, List[str]]) -> Union[List[int], List[List[int]]]:
-        def encode_one(seq: str) -> List[int]:
-            return self.dict.parse(self.coder.encode(seq))
-
         if type(seqs) is str:
-            return encode_one(seqs)
-        return [encode_one(seq) for seq in seqs]
+            return self._encode_one(seqs)
+        return [self._encode_one(seq) for seq in seqs]
 
     def tokenize(self, seqs: Union[str, List[str]]) -> Union[List[str], List[List[str]]]:
         def tokenize_one(seq: str) -> List[str]:
-            coded = self.dict.parse(self.coder.encode(seq))
+            coded = self._encode_one(seq)
             return [self.coder.decode(self.dict.get(id)) for id in coded]
 
         if type(seqs) is str:
             return tokenize_one(seqs)
         return [tokenize_one(seq) for seq in seqs]
 
-    def decode(self, coded_seqs: Union[List[int], List[List[int]]]) -> Union[str, List[str]]:
+    def decode(self, coded_seqs: Union[int, List[int], List[List[int]]]) -> Union[str, List[str]]:
         def decode_one(seq: List[int]) -> str:
             return "".join([self.coder.decode(self.dict.get(id)) for id in seq])
 
-        assert len(coded_seqs) > 0
+        if type(coded_seqs) is int:
+            return decode_one([coded_seqs])
 
+        assert len(coded_seqs) > 0
         if type(coded_seqs[0]) is int:
             return decode_one(coded_seqs)
         return [decode_one(seq) for seq in coded_seqs]
@@ -49,9 +69,10 @@ class VGramTokenizer(Tokenizer):
             texts = [texts]
         for iter in range(iters):
             for i in range(len(texts)):
-                line = texts[random.randint(0, len(texts))]
-                ids = self.coder.encode(line)
-                vgram_builder.accept(ids)
+                line = texts[random.randint(0, len(texts) - 1)]
+                for word in self._split_words(line):
+                    ids = self.coder.encode(word)
+                    vgram_builder.accept(ids)
 
         self.dict = vgram_builder.result()
 
@@ -65,9 +86,10 @@ class VGramTokenizer(Tokenizer):
                     lines = f.readlines()
                     for i in range(len(lines)):
                         # line = lines[random.randint(0, len(lines))]
-                        line = lines[i]
-                        ids = self.coder.encode(line)
-                        vgram_builder.accept(ids)
+                        line = lines[i].strip()
+                        for word in self._split_words(line):
+                            ids = self.coder.encode(word)
+                            vgram_builder.accept(ids)
 
         self.coder.fix()
         self.dict = vgram_builder.result()
