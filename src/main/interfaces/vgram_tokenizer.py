@@ -1,3 +1,4 @@
+import json
 import random
 from typing import List, Union, Optional
 
@@ -60,9 +61,6 @@ class VGramTokenizer(Tokenizer):
             return decode_one(coded_seqs)
         return [decode_one(seq) for seq in coded_seqs]
 
-    def save_pretrained(self, path: str):
-        raise NotImplementedError
-
     def fit(self, texts: Union[str, List[str]], iters: int = 1, verbose: int = 0):
         vgram_builder = VGramBuilder(self.size, verbose)
         if type(texts) is str:
@@ -100,6 +98,15 @@ class VGramTokenizer(Tokenizer):
     def vocab_size(self) -> int:
         return self.dict.size()
 
+    def save_pretrained(self, path: str):
+        res = {"dict": self.dict.to_json(), "coder": self.coder.to_json(),
+               "words_level": self.words_level, "size": self.size}
+        json.dump(res, open(path, 'w'))
+
     @staticmethod
-    def from_pretrained(path: str) -> 'Tokenizer':
-        raise NotImplementedError
+    def from_pretrained(path: str) -> 'VGramTokenizer':
+        res = json.load(open(path))
+        tokenizer = VGramTokenizer(res["size"], res["words_level"])
+        tokenizer.dict = IntDictionary.from_json(res["dict"])
+        tokenizer.coder = SimpleCoder.from_json(res["coder"])
+        return tokenizer

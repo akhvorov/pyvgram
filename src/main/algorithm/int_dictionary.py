@@ -1,6 +1,6 @@
 import copy
 from math import log
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Dict
 from bisect import bisect_left
 
 
@@ -110,3 +110,10 @@ class IntDictionary:
 
     def alphabet(self) -> List[Tuple[int]]:
         return self.seqs
+
+    def to_json(self) -> Dict:
+        return {"seqs": self.seqs}
+
+    @staticmethod
+    def from_json(json) -> 'IntDictionary':
+        return IntDictionary(json["seqs"])

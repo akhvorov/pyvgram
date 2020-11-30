@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Iterable
+from typing import List, Iterable, Dict
 
 
 class Coder(ABC):
@@ -21,7 +21,9 @@ class SimpleCoder(Coder):
     def encode(self, seq: str) -> List[int]:
         result = []
         for c in seq:
-            if not self._fixed and c not in self._char_to_int:
+            if c not in self._char_to_int:
+                if self._fixed:
+                    continue
                 self._char_to_int[c] = len(self._char_to_int)
                 self._int_to_char[self._char_to_int[c]] = c
             result.append(self._char_to_int[c])
@@ -44,3 +46,18 @@ class SimpleCoder(Coder):
 
     def fix(self):
         self._fixed = True
+
+    def to_json(self) -> Dict:
+        res = {"fixed": self._fixed, "chars": []}
+        for i, c in self._int_to_char.items():
+            res["chars"].append(c)
+        return res
+
+    @staticmethod
+    def from_json(json) -> 'Coder':
+        coder = SimpleCoder()
+        for c in json["chars"]:
+            coder.encode(c)
+        if json["fixed"]:
+            coder.fix()
+        return coder
