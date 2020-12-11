@@ -79,7 +79,7 @@ class VGramBuilder:
                 alpha_accum_num += 1
         self._populate = not self._populate
 
-    def _result_freqs(self):
+    def result_freqs(self):
         if self._result is None:
             return self._current.result_freqs()
         return self._result.result_freqs()
