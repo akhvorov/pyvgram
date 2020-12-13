@@ -20,7 +20,7 @@ class Tokenizer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def train(self, files: Union[str, List[str]], iters: int = 1, verbose: int = 0):
+    def train(self, files: Union[str, List[str]], iters: int = 1):
         raise NotImplementedError
 
     @abstractmethod
@@ -29,4 +29,8 @@ class Tokenizer(ABC):
 
     @abstractmethod
     def vocab_size(self) -> int:
+        raise NotImplementedError
+
+    @staticmethod
+    def from_pretrained(path: str) -> 'Tokenizer':
         raise NotImplementedError
