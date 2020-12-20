@@ -68,13 +68,13 @@ class VGramBuilder:
             min_prob_result, new_dict, freqs = self._current.expand(slots)
         else:
             min_prob_result, new_dict, freqs = self._current.reduce(self._size - alphabet_size)
-        self._result = StatDictionary(min_prob_result, new_dict, freqs)
+        self._result = StatDictionary(min_prob_result, new_dict, freqs)  # result only after reduce? # add stat collection for result while expand iteration
 
         self._current = copy.deepcopy(self._result)  # TODO need copy or not?
         alpha_accum_num = 0
         for i in range(self._current.size()):
             if self._current.parent(i) < 0:
-                if alpha_accum_num > alphabet_size:
+                if alpha_accum_num >= alphabet_size:
                     self._symb_alphabet.append(self._current.get(i))
                 alpha_accum_num += 1
         self._populate = not self._populate
