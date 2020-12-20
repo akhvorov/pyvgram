@@ -34,14 +34,15 @@ class StatDictionary:
             if init_freqs is None:
                 self.parse_freqs = [0] * len(seqs)
             else:
-                self.parse_freqs = copy.deepcopy(init_freqs)
+                _, init_freqs = zip(*sorted(zip(seqs, init_freqs)))
+                self.parse_freqs = copy.deepcopy(list(init_freqs))
             self.parse_freqs += [0] * (len(seqs) - len(self.parse_freqs))
 
         self.pairs_freqs = {}
         self.min_probability = min_prob_result
 
         self.power = 0
-        self.parse_freqs_init_power = 0
+        self.parse_freqs_init_power = sum(self.parse_freqs)
         self.total_chars = 0
 
     def update_symbol(self, index: int, freq: int):
