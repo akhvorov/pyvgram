@@ -44,6 +44,13 @@ class SimpleCoder(Coder):
     def __len__(self):
         return len(self._char_to_int)
 
+    def __eq__(self, other):
+        if not isinstance(other, SimpleCoder):
+            return False
+        return self._char_to_int == other._char_to_int and \
+               self._int_to_char == other._int_to_char and \
+               self._fixed == other._fixed
+
     def fix(self):
         self._fixed = True
 

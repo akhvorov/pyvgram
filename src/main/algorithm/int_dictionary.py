@@ -111,6 +111,11 @@ class IntDictionary:
     def alphabet(self) -> List[Tuple[int]]:
         return self.seqs
 
+    def __eq__(self, other):
+        if not isinstance(other, IntDictionary):
+            return False
+        return self.seqs == other.seqs and self.parents == other.parents
+
     def to_json(self) -> Dict:
         return {"seqs": self.seqs}
 

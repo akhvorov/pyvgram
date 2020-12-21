@@ -82,6 +82,11 @@ class VGramTokenizer(BaseTokenizer):
     def vocab_size(self) -> int:
         return self.vgram_applier.dict.size()
 
+    def __eq__(self, other):
+        if not isinstance(other, VGramTokenizer):
+            return False
+        return self.coder == self.coder and self.vgram_applier == other.vgram_applier
+
     def save_pretrained(self, path: str):
         res = {"applier": self.vgram_applier.to_json(), "coder": self.coder.to_json(),
                "words_level": self.words_level}

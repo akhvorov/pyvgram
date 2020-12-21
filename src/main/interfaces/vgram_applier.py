@@ -13,7 +13,6 @@ class VGramApplier(ABC):
         self.dict: Optional[IntDictionary] = None
         self.freqs: Optional[List[int]] = None
         self.total_freqs = 0
-        self.min_probability = 0.0
 
     def get(self, ind: int) -> Tuple[int]:
         return self.dict.get(ind)
@@ -23,12 +22,16 @@ class VGramApplier(ABC):
             raise ValueError(self.err_msg)
         return self.dict.weighted_parse(seq, self.freqs, self.total_freqs)
 
+    def __eq__(self, other):
+        if not isinstance(other, VGramApplier):
+            return False
+        return self.dict == self.dict and self.freqs == self.freqs and self.total_freqs == self.total_freqs
+
     def to_json(self) -> Dict:
         return {
             "size": self.size,
             "seqs": self.dict.seqs,
             "freqs": self.freqs,
-            "min_probability": self.min_probability
         }
 
 
@@ -47,7 +50,6 @@ class StaticVGramApplier(VGramApplier):
         self.dict = vgram_builder.result()
         self.freqs = vgram_builder.result_freqs()
         self.total_freqs = sum(self.freqs)
-        self.min_probability = vgram_builder.get_min_probability()
 
     @staticmethod
     def from_json(json) -> 'VGramApplier':
@@ -55,7 +57,6 @@ class StaticVGramApplier(VGramApplier):
         applier.dict = IntDictionary(json["seqs"])
         applier.freqs = json["freqs"]
         applier.total_freqs = sum(applier.freqs)
-        applier.min_probability = json["min_probability"]
         return applier
 
 
@@ -76,4 +77,3 @@ class IterativeVGramApplier(VGramApplier):
         self.dict = self.vgram_builder.result()
         self.freqs = self.vgram_builder.result_freqs()
         self.total_freqs = sum(self.freqs)
-        self.min_probability = self.vgram_builder.get_min_probability()

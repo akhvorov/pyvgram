@@ -35,9 +35,27 @@ def test_fit():
     print(decoded)
     assert decoded == "hello world"
 
+    assert len(tokenizer.get_vocab()) == 10
+    assert set(tokenizer.get_vocab()) == {'h', 'e', 'l', 'o', ' ', 'w', 'o', 'r', 'd', 'hello', 'hello world'}
+
+
+def test_save_and_load():
+    # tokenizer = train_default_tokenizer(200, 1)
+    tokenizer = VGramTokenizer(200, words_level=False, verbose=True)
+    tokenizer.fit(["hello", "hello world"] * 1000, iters=15)
+    path = ".tokenizer.tok"
+    try:
+        tokenizer.save_pretrained(path)
+        loaded_tokenizer = VGramTokenizer.from_pretrained(path)
+        assert tokenizer == loaded_tokenizer
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
 
 if __name__ == '__main__':
-    test_fit()
+    # test_fit()
     # test_train()
     # test_words_level()
-    # test_save_and_load()
+    test_save_and_load()
+    # learn_big_dict()
