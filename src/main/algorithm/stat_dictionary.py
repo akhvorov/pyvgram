@@ -98,7 +98,7 @@ class StatDictionary:
     def enough(self, prob_found: float) -> bool:
         return self.power > -log(prob_found) / self.min_probability
 
-    def expand(self, slots: int):
+    def expand(self, slots: int) -> 'StatDictionary':
         new_dict = []
         freqs = []
 
@@ -156,9 +156,9 @@ class StatDictionary:
             if item.first >= 0:
                 min_prob_result = min(min_prob_result, item.count / accumulated_freqs)
 
-        return min_prob_result, new_dict, freqs
+        return StatDictionary(min_prob_result, new_dict, freqs)
 
-    def reduce(self, slots: int):
+    def reduce(self, slots: int) -> 'StatDictionary':
         new_dict = []
         freqs = []
         items = self.filter_stat_items(slots)
@@ -174,13 +174,9 @@ class StatDictionary:
             new_dict.append(self.get(item.second))
             freqs.append(item.count)
 
-        return min_prob_result, new_dict, freqs
+        return StatDictionary(min_prob_result, new_dict, freqs)
 
     def filter_stat_items(self, slots: int) -> List[StatItem]:
-        for s in range(len(self.symbol_freqs)):
-            if self.parent(s) < 0:
-                slots += 1
-
         excludes = set()
         for id in range(self.size()):
             if self.parent(id) >= 0 and self.freq(id) == 0:
@@ -226,10 +222,10 @@ class StatDictionary:
         return items
 
     def result_freqs(self) -> List[int]:
-        if self.size() > len(self.symbol_freqs):
-            for i in range(len(self.symbol_freqs), self.size()):
-                self.symbol_freqs.append(0)
-        return copy.deepcopy(self.symbol_freqs)
+        if self.size() > len(self.parse_freqs):
+            for i in range(len(self.parse_freqs), self.size()):
+                self.parse_freqs.append(0)
+        return copy.deepcopy(self.parse_freqs)
 
     def stat_item_to_text(self, item: 'StatItem') -> Tuple[int]:
         if item.first >= 0:

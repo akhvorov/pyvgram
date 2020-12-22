@@ -58,19 +58,18 @@ class VGramBuilder:
 
         alphabet_size = len(self._symb_alphabet)
         if self._populate:
-            if self._verbose > 0:
-                print(f"Size: {self._current.size()} rate: {compression_rate} minimal probability: {self._current.min_probability}")
+            if self._verbose > 0 and self._result is not None:
+                print(f"Size: {self._result.size()} rate: {compression_rate} minimal probability: {self._current.min_probability}")
 
             if self._current.size() * self._kExtensionFactor < 10:
                 slots = self._size - alphabet_size
             else:
                 slots = self._current.size() * self._kExtensionFactor
-            min_prob_result, new_dict, freqs = self._current.expand(slots)
+            self._current = self._current.expand(slots)
         else:
-            min_prob_result, new_dict, freqs = self._current.reduce(self._size - alphabet_size)
-        self._result = StatDictionary(min_prob_result, new_dict, freqs)  # result only after reduce? # add stat collection for result while expand iteration
+            self._current = self._current.reduce(self._size)
+            self._result = copy.deepcopy(self._current)
 
-        self._current = copy.deepcopy(self._result)  # TODO need copy or not?
         alpha_accum_num = 0
         for i in range(self._current.size()):
             if self._current.parent(i) < 0:

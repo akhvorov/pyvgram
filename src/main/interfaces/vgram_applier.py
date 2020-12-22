@@ -54,7 +54,8 @@ class StaticVGramApplier(VGramApplier):
     @staticmethod
     def from_json(json) -> 'VGramApplier':
         applier = StaticVGramApplier(json["size"])
-        applier.dict = IntDictionary(json["seqs"])
+        seqs = [tuple(s) for s in json["seqs"]]
+        applier.dict = IntDictionary(seqs)
         applier.freqs = json["freqs"]
         applier.total_freqs = sum(applier.freqs)
         return applier
