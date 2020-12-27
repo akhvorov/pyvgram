@@ -2,8 +2,8 @@ import copy
 from math import log
 from typing import List, Tuple
 
-from main.algorithm.int_dictionary import IntDictionary
-from main.algorithm.stat_dictionary import StatDictionary
+from vgram.main.algorithm.int_dictionary import IntDictionary
+from vgram.main.algorithm.stat_dictionary import StatDictionary
 
 
 class VGramBuilder:

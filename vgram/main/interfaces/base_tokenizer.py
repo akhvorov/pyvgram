@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import List
 
-from main.interfaces.tokenizer import Tokenizer
+from vgram.main.interfaces.tokenizer import Tokenizer
 
 
 class BaseTokenizer(Tokenizer, ABC):

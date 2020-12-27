@@ -3,7 +3,7 @@ import numpy as np
 from math import log
 from typing import List, Tuple, Set
 
-from main.algorithm.int_dictionary import IntDictionary
+from vgram.main.algorithm.int_dictionary import IntDictionary
 
 
 class StatItem:

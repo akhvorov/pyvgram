@@ -2,9 +2,9 @@ import json
 import random
 from typing import List, Union
 
-from main.interfaces.vgram_applier import IterativeVGramApplier, StaticVGramApplier
-from main.interfaces.base_tokenizer import BaseTokenizer
-from main.interfaces.coder import SimpleCoder
+from vgram.main.interfaces.vgram_applier import IterativeVGramApplier, StaticVGramApplier
+from vgram.main.interfaces.base_tokenizer import BaseTokenizer
+from vgram.main.interfaces.coder import SimpleCoder
 
 
 class VGramTokenizer(BaseTokenizer):

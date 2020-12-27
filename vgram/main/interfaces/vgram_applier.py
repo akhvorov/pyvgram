@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Optional, List, Iterable, Dict, Tuple
 
-from main.algorithm.int_dictionary import IntDictionary
-from main.algorithm.vgram_builder import VGramBuilder
+from vgram.main.algorithm.int_dictionary import IntDictionary
+from vgram.main.algorithm.vgram_builder import VGramBuilder
 
 
 class VGramApplier(ABC):
