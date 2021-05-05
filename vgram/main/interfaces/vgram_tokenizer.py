@@ -5,14 +5,14 @@ from typing import List, Union
 from vgram.main.interfaces.vgram_applier import IterativeVGramApplier, StaticVGramApplier
 from vgram.main.interfaces.base_tokenizer import BaseTokenizer
 from vgram.main.interfaces.coder import SimpleCoder
+from vgram.main.interfaces.splitter import SplitLevel
 
 
 class VGramTokenizer(BaseTokenizer):
-    def __init__(self, size: int = 30000, words_level: bool = True, verbose: bool = False):
-        super().__init__(words_level)
+    def __init__(self, size: int = 30000, split_level: SplitLevel = SplitLevel.WORD, verbose: bool = False):
+        super().__init__(split_level)
         self.coder = SimpleCoder()
-        self.verbose = verbose
-        self.vgram_applier = IterativeVGramApplier(size, self.verbose)
+        self.vgram_applier = IterativeVGramApplier(size, verbose)
 
     def _encode_one(self, seq: str) -> List[int]:
         coded = []
@@ -47,6 +47,7 @@ class VGramTokenizer(BaseTokenizer):
         return [decode_one(seq) for seq in coded_seqs]
 
     def fit(self, texts: Union[str, List[str]], iters: int = 1):
+        self.coder.fix(False)
         if type(texts) is str:
             texts = [texts]
         for iter in range(iters):
@@ -60,6 +61,7 @@ class VGramTokenizer(BaseTokenizer):
         self.vgram_applier.update()
 
     def train(self, files: Union[str, List[str]], iters: int = 1):
+        self.coder.fix(False)
         if type(files) is str:
             files = [files]
         for iter in range(iters):
@@ -89,13 +91,13 @@ class VGramTokenizer(BaseTokenizer):
 
     def save_pretrained(self, path: str):
         res = {"applier": self.vgram_applier.to_json(), "coder": self.coder.to_json(),
-               "words_level": self.words_level}
+               "split_level": self.split_level}
         json.dump(res, open(path, 'w'))
 
     @staticmethod
     def from_pretrained(path: str) -> 'VGramTokenizer':
         res = json.load(open(path))
-        tokenizer = VGramTokenizer(res["words_level"])
+        tokenizer = VGramTokenizer(split_level=res["split_level"])
         tokenizer.vgram_applier = StaticVGramApplier.from_json(res["applier"])
         tokenizer.coder = SimpleCoder.from_json(res["coder"])
         return tokenizer

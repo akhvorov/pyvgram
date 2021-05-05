@@ -30,10 +30,7 @@ class SimpleCoder(Coder):
         return result
 
     def decode(self, seq: Iterable[int]) -> str:
-        result = ""
-        for c in seq:
-            result += self._int_to_char[c]
-        return result
+        return "".join(self._int_to_char[c] for c in seq)
 
     def char_to_id(self, c: str) -> int:
         return self._char_to_int[c]
@@ -51,8 +48,8 @@ class SimpleCoder(Coder):
                self._int_to_char == other._int_to_char and \
                self._fixed == other._fixed
 
-    def fix(self):
-        self._fixed = True
+    def fix(self, fixed: bool = True):
+        self._fixed = fixed
 
     def to_json(self) -> Dict:
         res = {"fixed": self._fixed, "chars": []}
