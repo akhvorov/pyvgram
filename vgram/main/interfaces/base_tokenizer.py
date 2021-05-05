@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import List
 
-from main.interfaces.splitter import SplitLevel
+from vgram.main.interfaces.splitter import SplitLevel
 from vgram.main.interfaces.tokenizer import Tokenizer
 
 
