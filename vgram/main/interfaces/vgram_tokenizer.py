@@ -97,7 +97,8 @@ class VGramTokenizer(BaseTokenizer):
     @staticmethod
     def from_pretrained(path: str) -> 'VGramTokenizer':
         res = json.load(open(path))
-        tokenizer = VGramTokenizer(split_level=res["split_level"])
+        split_level = res.get("split_level", SplitLevel.WORD if res["words_level"] else SplitLevel.NONE)
+        tokenizer = VGramTokenizer(split_level=split_level)
         tokenizer.vgram_applier = StaticVGramApplier.from_json(res["applier"])
         tokenizer.coder = SimpleCoder.from_json(res["coder"])
         return tokenizer
