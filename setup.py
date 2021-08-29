@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyvgram",
-    version="0.1.1",
+    version="0.1.2",
     author="Aleksandr Khvorov",
     author_email="khvorov.aleksandr@gmail.com",
     description="VGram tokenization",
