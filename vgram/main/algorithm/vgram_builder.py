@@ -25,7 +25,7 @@ class VGramBuilder:
     def result(self) -> IntDictionary:
         return self._current.dict if self._result is None else self._result.dict
 
-    def alphabet(self) -> List[Tuple[int]]:
+    def alphabet(self) -> List[Tuple[int, ...]]:
         if self._result is None:
             return self._current.alphabet()
         return self._result.alphabet()

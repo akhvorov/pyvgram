@@ -5,7 +5,7 @@ from bisect import bisect_left
 
 
 class IntDictionary:
-    def __init__(self, seqs: List[Tuple[int]] = None):
+    def __init__(self, seqs: List[Tuple[int, ...]] = None):
         self.parents = [-1] * len(seqs) if seqs is not None else []
         if seqs is None:
             self.seqs = []
@@ -25,7 +25,7 @@ class IntDictionary:
 
             parents_stack.append((current, i))
 
-    def search(self, seq: Tuple[int], excludes: Set[int] = None) -> int:
+    def search(self, seq: Tuple[int, ...], excludes: Set[int] = None) -> int:
         index = bisect_left(self.seqs, tuple(seq))
         if 0 <= index < self.size() and self.seqs[index] == seq:
             if excludes is None or index not in excludes:

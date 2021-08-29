@@ -14,7 +14,7 @@ class VGramApplier(ABC):
         self.freqs: Optional[List[int]] = None
         self.total_freqs = 0
 
-    def get(self, ind: int) -> Tuple[int]:
+    def get(self, ind: int) -> Tuple[int, ...]:
         return self.dict.get(ind)
 
     def parse(self, seq: List[int]) -> List[int]:
@@ -65,11 +65,6 @@ class IterativeVGramApplier(VGramApplier):
     def __init__(self, size: int = 30000, verbose: bool = False):
         super().__init__(size, "Applier is not updated. Please call `update()` before parsing")
         self.vgram_builder = VGramBuilder(self.size, verbose)
-
-    def parse(self, seq: List[int]) -> List[int]:
-        if self.dict is None:
-            raise ValueError("Applier is not updated. Please call `update()` before parsing")
-        return self.dict.weighted_parse(seq, self.freqs, self.total_freqs)
 
     def accept(self, seq: List[int]):
         self.vgram_builder.accept(seq)

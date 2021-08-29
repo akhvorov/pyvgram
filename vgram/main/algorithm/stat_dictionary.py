@@ -22,7 +22,7 @@ class StatDictionary:
     kAggPower = 100000
 
     def __init__(self, min_prob_result: float = kMaxMinProbability,
-                 seqs: List[Tuple[int]] = None,
+                 seqs: List[Tuple[int, ...]] = None,
                  init_freqs: List[int] = None):
         self.dict = IntDictionary(seqs)
         self.symbol_freqs = []
@@ -56,7 +56,7 @@ class StatDictionary:
         self.parse_freqs[index] += freq
         self.power += freq
 
-    def search(self, seq: Tuple[int], excludes: Set[int] = None) -> int:
+    def search(self, seq: Tuple[int, ...], excludes: Set[int] = None) -> int:
         return self.dict.search(seq, excludes)
 
     def parse(self, seq: List[int]) -> List[int]:
@@ -72,7 +72,7 @@ class StatDictionary:
 
         return parse_result
 
-    def get(self, ind: int) -> Tuple[int]:
+    def get(self, ind: int) -> Tuple[int, ...]:
         return self.dict.get(ind)
 
     def size(self):
@@ -81,7 +81,7 @@ class StatDictionary:
     def parent(self, ind: int) -> int:
         return self.dict.parent(ind)
 
-    def alphabet(self) -> List[Tuple[int]]:
+    def alphabet(self) -> List[Tuple[int, ...]]:
         return self.dict.alphabet()
 
     def freq(self, index: int) -> int:
@@ -227,7 +227,7 @@ class StatDictionary:
                 self.parse_freqs.append(0)
         return copy.deepcopy(self.parse_freqs)
 
-    def stat_item_to_text(self, item: 'StatItem') -> Tuple[int]:
+    def stat_item_to_text(self, item: 'StatItem') -> Tuple[int, ...]:
         if item.first >= 0:
             return tuple(list(self.get(item.first)) + list(self.get(item.second)))
         else:
