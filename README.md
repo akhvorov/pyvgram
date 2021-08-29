@@ -1,3 +1,6 @@
+[![PyPI version](https://badge.fury.io/py/pyvgram.svg)](https://badge.fury.io/py/pyvgram)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 # pyvgram
 🍺 Python implementation on vgram tokenization
 
@@ -21,9 +24,12 @@ Let's train tokenizer with size `10000` on `file.txt` content and encodes some s
 from vgram import VGramTokenizer
 
 tokenizer = VGramTokenizer(10000)
-tokenizer.train(["file.txt"])
+tokenizer.train("file.txt")
 ids = tokenizer.encode("hello world")
 ```
+
+`train` method used for training from file name or list of names. 
+For learning from string use `fit` method.
 
 ### 2. Save and load
 
@@ -31,7 +37,7 @@ ids = tokenizer.encode("hello world")
 from vgram import VGramTokenizer
 
 tokenizer = VGramTokenizer(10000)
-tokenizer.train(["file.txt"])
+tokenizer.train(["file1.txt", "file2.txt"])
 ids1 = tokenizer.encode("hello world")
 
 tokenizer.save_pretrained("vgram.tokenizer")
@@ -44,7 +50,7 @@ assert ids1 == ids2
 
 ### 3. Learn from raw text
 
-You can learn a tokenizer from raw text by `fit` method.
+You can learn a tokenizer from raw text by `fit` method by passing string or list of strings.
 
 ```python
 from vgram import VGramTokenizer
@@ -54,7 +60,8 @@ tokenizer.fit(" ".join(["hello world"] * 1000))
 ids = tokenizer.encode("hello world")
 ```
 
-Also, you can specify iters num if you want to learn more by bootstrap sampling.
+Also, you can specify `iters` number if you want to learn more. 
+Bootstrap sampling is used in case of list of stings.
 
 ```python
 from vgram import VGramTokenizer
